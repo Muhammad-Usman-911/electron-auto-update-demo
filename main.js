@@ -37,15 +37,37 @@ app.on('activate', () => {
   }
 });
 
-// Auto-updater events
-autoUpdater.on('update-available', () => {
-  mainWindow.webContents.send('update_available');
+// Enhanced auto-updater events
+autoUpdater.on('checking-for-update', () => {
+  mainWindow.webContents.send('update_checking');
 });
 
-autoUpdater.on('update-downloaded', () => {
-  mainWindow.webContents.send('update_downloaded');
+autoUpdater.on('update-available', (info) => {
+  mainWindow.webContents.send('update_available', info);
 });
 
+autoUpdater.on('update-not-available', () => {
+  mainWindow.webContents.send('update_not_available');
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+  mainWindow.webContents.send('update_progress', progressObj);
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+  mainWindow.webContents.send('update_downloaded', info);
+});
+
+autoUpdater.on('error', (err) => {
+  mainWindow.webContents.send('update_error', err);
+});
+
+// Handle manual update check
+ipcMain.on('check_for_update', () => {
+  autoUpdater.checkForUpdates();
+});
+
+// Handle restart and install
 ipcMain.on('restart_app', () => {
-  autoUpdater.quitAndInstall();
+  autoUpdater.quitAndInstall(true, true);
 });

@@ -51,6 +51,26 @@
       color: #666;
       font-size: 0.8em;
     }
+    #status-message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+      max-width: 300px;
+      z-index: 1000;
+    }
+  
+    .status-success {
+      background-color: #4CAF50;
+      color: white;
+    }
+  
+    .status-error {
+      background-color: #f44336;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -61,7 +81,7 @@
     <div class="content">
       <p>This is a simple Electron app with auto-update functionality.</p>
     </div>
-    
+    <div id="status-message"></div>
     <div id="update-available" class="update-banner">
       <p>A new update is available!</p>
       <button id="update-btn">Update app for new features!</button>
