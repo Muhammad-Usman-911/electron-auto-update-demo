@@ -6,18 +6,19 @@ const pkg = require('./package.json');
 document.getElementById('version-number').innerText = pkg.version;
 
 let downloadInProgress = false;
-
-// Add status message function
 function showStatus(message, isError = false) {
   const statusDiv = document.getElementById('status-message');
   statusDiv.textContent = message;
+  console.log(message);
   statusDiv.className = isError ? 'status-error' : 'status-success';
   statusDiv.style.display = 'block';
-  
-  // Hide status after 5 seconds
-  setTimeout(() => {
-    statusDiv.style.display = 'none';
-  }, 5000);
+
+  // Only hide success messages after 5 seconds, keep errors visible
+  if (!isError) {
+    setTimeout(() => {
+      statusDiv.style.display = 'none';
+    }, 5000);
+  }
 }
 
 // Update checking
@@ -57,18 +58,18 @@ ipcRenderer.on('update_downloaded', (event, info) => {
   downloadInProgress = false;
   document.getElementById('update-available').style.display = 'none';
   document.getElementById('update-downloaded').style.display = 'block';
-  
+
   // Update the version number to show the new version
   document.getElementById('version-number').innerText = info.version;
-  
+
   showStatus(`Update v${info.version} downloaded successfully! Restarting soon...`);
-  
+
   // Automatically restart after 5 seconds
   const restartBtn = document.getElementById('restart-btn');
   let countdown = 5;
-  
+
   restartBtn.innerText = `Restarting in ${countdown} seconds...`;
-  
+
   const countdownInterval = setInterval(() => {
     countdown--;
     if (countdown <= 0) {
@@ -77,7 +78,7 @@ ipcRenderer.on('update_downloaded', (event, info) => {
     } else {
       restartBtn.innerText = `Restarting in ${countdown} seconds...`;
     }
-  }, 1000);
+  }, 5000);
 });
 
 // Update error
@@ -98,3 +99,7 @@ document.getElementById('update-btn').addEventListener('click', () => {
 document.getElementById('restart-btn').addEventListener('click', () => {
   ipcRenderer.send('restart_app');
 });
+
+function hideStatus() {
+  document.getElementById('status-message').style.display = 'none';
+}

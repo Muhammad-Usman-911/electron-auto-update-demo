@@ -81,7 +81,11 @@
     <div class="content">
       <p>This is a simple Electron app with auto-update functionality.</p>
     </div>
-    <div id="status-message"></div>
+    <div id="status-message">
+      <span id="status-text"></span>
+      <button id="close-status" onclick="hideStatus()">✖</button>
+    </div>
+    
     <div id="update-available" class="update-banner">
       <p>A new update is available!</p>
       <button id="update-btn">Update app for new features!</button>
